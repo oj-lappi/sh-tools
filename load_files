@@ -1,0 +1,47 @@
+#!/bin/sh
+
+show_usage(){
+	script=$(basename $0)
+	printf "\nusage: $script shader_dir [module_dir] \n\nif module_dir is empty, module is written to stdout\n"
+	exit 1
+}
+if [ $# -lt 1 ];then
+	show_usage
+else
+	if [ -d $1 ]; then
+		info="loading files from $1"
+		source=${1%/}
+	else
+		echo "$1 is not a directory" 1>&2
+		show_usage
+	fi
+	if [ $# -eq 2 ];then
+		if [ -d $2 ]; then
+			target_dir=${2%/}
+			target_file=files.js
+		elif [ -d ${2%/*} ]; then
+			target_dir=${2%/*} 
+			target_file=${target_dir%2}
+		else
+			echo "$2 is not a directory" 1>&2
+			show_usage
+		fi
+			info="$info into $2"
+	fi
+	echo $info
+	module="export default {"
+	for i in $(ls -p $source|grep -v /);
+	do
+		path=$source/$i
+		content=$(cat $path)
+		module=$module$i:"$content",
+	done	
+	module=${module%,}}
+	
+	if [ $# -eq 2 ]; then
+		echo "$module" > $target_dir/$target_file
+	else
+		echo "$module"
+	fi
+fi
+
