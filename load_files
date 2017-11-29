@@ -2,7 +2,7 @@
 
 show_usage(){
 	script=$(basename $0)
-	printf "\nusage: $script shader_dir [module_dir] \n\nif module_dir is empty, module is written to stdout\n"
+	printf "\nusage: $script shader_dir [module_path] \n\nif module_path is empty, module is written to stdout\n"
 	exit 1
 }
 if [ $# -lt 1 ];then
