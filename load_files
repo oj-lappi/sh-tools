@@ -21,7 +21,10 @@ else
 			target_file=files.js
 		elif [ -d ${2%/*} ]; then
 			target_dir=${2%/*} 
-			target_file=${target_dir%2}
+			target_file=${2#target_dir}
+		elif [ -n ${2##*/*}  ];then
+			target_dir=.
+			target_file=$2
 		else
 			echo "$2 is not a directory" 1>&2
 			show_usage
@@ -34,10 +37,9 @@ else
 	do
 		path=$source/$i
 		content=$(cat $path)
-		module=$module$i:"$content",
+		module=$module'"'$i'"':'`'$content'`',
 	done	
 	module=${module%,}}
-	
 	if [ $# -eq 2 ]; then
 		echo "$module" > $target_dir/$target_file
 	else
