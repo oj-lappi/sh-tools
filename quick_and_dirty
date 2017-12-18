@@ -1,0 +1,14 @@
+#!/bin/bash
+files_listed="$(ls)"
+git clone $1
+files_after="$(ls)"
+
+echo $files_listed
+echo $files_after
+repo="$(comm -13 <(printf "$files_listed") <(printf "$files_after") )"
+cd $repo
+repo_path="$(pwd)"
+while read binary
+do
+ln -s $repo_path/$repo/$binary /usr/local/bin/$binary
+done < .bin_list
